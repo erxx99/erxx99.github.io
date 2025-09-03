@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOM Rendering Test Page</title>
+    <title>DOM Rendering & Scroll Test Page</title>
     <style>
         /* --- Global styles for the main document --- */
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6; 
-            padding: 20px; 
+            padding: 80px 20px 20px 20px; /* Add padding-top for the fixed status bar */
             background-color: #f0f2f5; 
             color: #1c1e21;
         }
@@ -39,140 +39,215 @@
         button:hover { background-color: #0056b3; }
         iframe { 
             width: 100%; 
-            height: 150px; 
+            height: 200px; /* Increased height for better scroll testing */
             border: 1px solid #ccc; 
             border-radius: 4px;
+        }
+        #scroll-status {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #1c1e21;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
 
+    <div id="scroll-status">Last Scrolled Area: None</div>
+
     <h1>DOM & Shadow DOM Rendering Test</h1>
 
+    <!-- ======================================================= -->
+    <!-- 1. Basic DOM Elements (Light DOM)                     -->
+    <!-- ======================================================= -->
     <div class="container">
         <h2>1. Basic DOM Elements</h2>
-        <p>These are standard HTML elements rendered in the main document (sometimes called the "Light DOM"). They are styled by the global stylesheet in the `<head>` tag.</p>
+        <p>These are standard HTML elements in the main document.</p>
         <button id="main-dom-button">Main Document Button</button>
-        <a href="#">This is a standard link.</a>
     </div>
 
+    <!-- ======================================================= -->
+    <!-- 2, 3, 5. SCROLLABLE Shadow DOM Host                   -->
+    <!-- ======================================================= -->
     <div class="container">
-        <h2>2, 3, & 5. Shadow DOM Elements</h2>
-        <p>The content below is rendered inside a custom element with a <strong>Shadow DOM</strong> attached. Notice how the global styles (like the blue button style) do not affect the elements inside it.</p>
+        <h2>2, 3, & 5. Scrollable Shadow DOM</h2>
+        <p>The container below has a fixed height and its content overflows, making it scrollable. Scroll inside it to see the status bar update.</p>
         <my-shadow-host></my-shadow-host>
     </div>
 
+    <!-- ======================================================= -->
+    <!-- 4. SCROLLABLE Iframe in the Main Document             -->
+    <!-- ======================================================= -->
     <div class="container">
-        <h2>4. Iframe in the Main Document</h2>
-        <p>This is a standard `<iframe>` placed in the main document. It represents a completely separate browsing context.</p>
-        <iframe srcdoc="<!DOCTYPE html>
+        <h2>4. Scrollable Iframe</h2>
+        <p>This iframe's content is taller than its frame, making it scrollable. Scroll inside it to test.</p>
+        <iframe id="iframe-1" srcdoc="<!DOCTYPE html>
             <html>
                 <head><style>body{background-color: #e6f7ff; font-family: sans-serif; padding: 10px; color: #004085;}</style></head>
                 <body>
-                    <h3>Content Inside a Regular Iframe</h3>
-                    <p>This content is in its own isolated document.</p>
+                    <h3>Content Inside a Scrollable Iframe</h3>
+                    <p>This content is in its own isolated document. There is enough text here to cause a scrollbar to appear within the iframe's boundaries.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.</p>
+                    <p>Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat.</p>
+                    <p>Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue.</p>
                 </body>
-            </html>" title="Regular Iframe in Main Document">
+            </html>" title="Scrollable Iframe in Main Document">
         </iframe>
     </div>
+    
+    <!-- ======================================================= -->
+    <!-- 6. Iframe with Injected Script                        -->
+    <!-- ======================================================= -->
+    <div class="container">
+        <h2>6. Iframe with Injected Script</h2>
+        <p>This iframe is initially empty. JavaScript is used to write its content, including a script tag that loads an external resource into the iframe's own context. It is also scrollable.</p>
+        <iframe id="iframe-2" title="Iframe with Injected Script"></iframe>
+    </div>
 
+    <!-- ======================================================= -->
+    <!-- 7. Lorem Ipsum for Main Page Scrolling                -->
+    <!-- ======================================================= -->
+    <div class="container">
+        <h2>7. Main Page Content</h2>
+        <p>This text is here to make the main browser window scrollable. Scroll up and down on the main page (outside the other boxes) to see the status bar change.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. </p>
+        <p>Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. </p>
+        <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. </p>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- All JavaScript Logic                                  -->
+    <!-- ======================================================= -->
     <script>
-        // --- Definition for the NESTED Shadow DOM element ---
+        // --- 1. Define Custom Elements with Shadow DOM ---
         class MyNestedShadow extends HTMLElement {
             constructor() {
                 super();
-                // Attach a shadow root to this custom element
                 const shadowRoot = this.attachShadow({ mode: 'open' });
-                
-                // Define the HTML and CSS for the nested shadow DOM
                 shadowRoot.innerHTML = `
                     <style>
-                        :host { 
-                            display: block; 
-                            padding: 15px; 
-                            background-color: #fff0f5; 
-                            border: 2px dashed #d83b01; 
-                            border-radius: 5px; 
-                        }
-                        p { 
-                            color: #d83b01; 
-                            font-weight: bold; 
-                            margin: 0;
-                        }
+                        :host { display: block; padding: 15px; background-color: #fff0f5; border: 2px dashed #d83b01; border-radius: 5px; margin-top: 15px; }
+                        p { color: #d83b01; font-weight: bold; margin: 0; }
                     </style>
-                    <p>This text is inside a NESTED Shadow DOM! Nested styles are encapsulated here.</p>
+                    <p>This text is inside a NESTED Shadow DOM!</p>
                 `;
             }
         }
         customElements.define('my-nested-shadow', MyNestedShadow);
 
-
-        // --- Definition for the MAIN Shadow DOM element ---
         class MyShadowHost extends HTMLElement {
             constructor() {
                 super();
-                // Attach a shadow root to this custom element
                 const shadowRoot = this.attachShadow({ mode: 'open' });
-
-                // Define the HTML and CSS for the main shadow DOM
-                // This will include the nested shadow element and an iframe
                 shadowRoot.innerHTML = `
                     <style>
-                        /* These styles are encapsulated and ONLY apply inside this shadow DOM */
                         :host { 
                             display: block; 
                             border: 2px solid #4CAF50; 
                             padding: 20px; 
                             border-radius: 5px; 
-                            background-color: #f1f8e9; 
+                            background-color: #f1f8e9;
+                            height: 300px; /* Make it scrollable */
+                            overflow-y: scroll;
                         }
                         h3 { color: #2e7d32; }
                         p { color: #555; }
-                        span { background-color: yellow; padding: 2px 4px; border-radius: 3px;}
-                        
-                        /* Global styles from the main page DO NOT apply to this button by default */
-                        button {
-                            padding: 10px 20px;
-                            border: 1px solid #2e7d32;
-                            background-color: #81c784;
-                            color: #1b5e20;
-                            border-radius: 5px;
-                            cursor: pointer;
-                            font-weight: normal;
-                        }
                         hr { border: 0; border-top: 1px solid #a5d6a7; margin: 25px 0; }
                     </style>
 
-                    <h3>2. Inside the Shadow DOM</h3>
-                    <p>This paragraph and the button below are rendered inside a shadow root. Their styles are <span>encapsulated</span> from the main page.</p>
-                    <button id="shadow-dom-button">Shadow DOM Button</button>
-
+                    <h3>2. Inside the Scrollable Shadow DOM</h3>
+                    <p>This content is inside a shadow root. Its styles are encapsulated.</p>
+                    <p>Scroll down to see more content within this element...</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam.</p>
                     <hr>
-
                     <h3>3. Shadow DOM inside Shadow DOM</h3>
-                    <p>Below is another custom element, which has its own shadow DOM, placed inside the first one.</p>
                     <my-nested-shadow></my-nested-shadow>
-
                     <hr>
-
                     <h3>5. Iframe inside Shadow DOM</h3>
-                    <p>This `<iframe>` is also inside the main shadow DOM. Like any iframe, it's a separate document context.</p>
-                    <iframe srcdoc="<!DOCTYPE html>
-                        <html>
-                            <head><style>body{background-color: #fff9c4; font-family: sans-serif; padding: 10px; color: #8a6d3b;}</style></head>
-                            <body>
-                                <h4>Content inside an Iframe THAT IS inside a Shadow DOM</h4>
-                                <p>This is yet another separate document context.</p>
-                            </body>
-                        </html>" title="Iframe inside Shadow DOM">
-                    </iframe>
+                    <iframe srcdoc="<!DOCTYPE html><html><head><style>body{background-color: #fff9c4; font-family: sans-serif; padding: 10px; color: #8a6d3b;}</style></head><body><h4>Iframe in Shadow DOM</h4><p>This is a separate document context.</p></body></html>" title="Iframe inside Shadow DOM"></iframe>
+                    <p>More content to ensure scrolling is possible.</p>
+                    <p>Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales.</p>
                 `;
             }
         }
         customElements.define('my-shadow-host', MyShadowHost);
-    </script>
-    
-    <script>
+
+        // --- 2. Setup Scroll Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const statusDiv = document.getElementById('scroll-status');
+            
+            // Listener for the main window
+            window.addEventListener('scroll', () => {
+                statusDiv.textContent = 'Last Scrolled Area: Main Page';
+            });
+
+            // Listener for the Shadow DOM
+            const shadowHost = document.querySelector('my-shadow-host');
+            if (shadowHost && shadowHost.shadowRoot) {
+                shadowHost.shadowRoot.addEventListener('scroll', () => {
+                    statusDiv.textContent = 'Last Scrolled Area: Shadow DOM';
+                });
+            }
+            
+            // Listener for the first iframe
+            const iframe1 = document.getElementById('iframe-1');
+            if (iframe1) {
+                iframe1.onload = () => {
+                    iframe1.contentWindow.onscroll = () => {
+                        statusDiv.textContent = 'Last Scrolled Area: Iframe #1';
+                    };
+                };
+            }
+
+            // --- 3. Inject Content and Script into the Second Iframe ---
+            const iframe2 = document.getElementById('iframe-2');
+            if (iframe2) {
+                iframe2.onload = () => {
+                    // Also attach a scroll listener to it
+                    iframe2.contentWindow.onscroll = () => {
+                        statusDiv.textContent = 'Last Scrolled Area: Iframe #2 (with injected script)';
+                    };
+                };
+                
+                const iframeContent = `
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <title>Injected Content</title>
+                        <style>body { font-family: sans-serif; padding: 10px; background-color: #fce4ec; color: #880e4f; }</style>
+                    </head>
+                    <body>
+                        <h3>Content Injected by JavaScript</h3>
+                        <p>This document, including the script below, was written dynamically.</p>
+                        <p>This iframe should also be scrollable to test event listeners.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam nec magna. Nunc a ipsum. Pellentesque tellus. Cras est.</p>
+                        <p>Phasellus a libero. Vivamus viverra, lacus at viverra pretium, est nunc commodo massa, ac varius odio eros a justo.</p>
+                        <script>
+                            (function(){
+                                var jq = document.createElement('script');
+                                jq.src = "https://api.erki-vaino.dev.samo.io/salemove_integration.js";
+                                document.head.appendChild(jq);
+                                console.log('Script injected into iframe-2 head.');
+                            })();
+                        <\/script>
+                    </body>
+                    </html>
+                `;
+                // Write the content to the iframe
+                iframe2.contentWindow.document.open();
+                iframe2.contentWindow.document.write(iframeContent);
+                iframe2.contentWindow.document.close();
+            }
+        });
+
+        // --- 4. Include the user-provided script in the MAIN document ---
         (function(){
             var jq = document.createElement('script');
             jq.src = "https://api.erki-vaino.dev.samo.io/salemove_integration.js";
