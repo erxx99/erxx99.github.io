@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Rendering Test Page</title>
+    <style>
+        /* --- Global styles for the main document --- */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6; 
+            padding: 20px; 
+            background-color: #f0f2f5; 
+            color: #1c1e21;
+        }
+        .container { 
+            background-color: #ffffff; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #dddfe2;
+        }
+        h1, h2 { 
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        p { margin: 1em 0; }
+        button { 
+            padding: 8px 15px; 
+            border: none; 
+            background-color: #007bff; 
+            color: white; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-weight: bold;
+        }
+        button:hover { background-color: #0056b3; }
+        iframe { 
+            width: 100%; 
+            height: 150px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>DOM & Shadow DOM Rendering Test</h1>
+
+    <div class="container">
+        <h2>1. Basic DOM Elements</h2>
+        <p>These are standard HTML elements rendered in the main document (sometimes called the "Light DOM"). They are styled by the global stylesheet in the `<head>` tag.</p>
+        <button id="main-dom-button">Main Document Button</button>
+        <a href="#">This is a standard link.</a>
+    </div>
+
+    <div class="container">
+        <h2>2, 3, & 5. Shadow DOM Elements</h2>
+        <p>The content below is rendered inside a custom element with a <strong>Shadow DOM</strong> attached. Notice how the global styles (like the blue button style) do not affect the elements inside it.</p>
+        <my-shadow-host></my-shadow-host>
+    </div>
+
+    <div class="container">
+        <h2>4. Iframe in the Main Document</h2>
+        <p>This is a standard `<iframe>` placed in the main document. It represents a completely separate browsing context.</p>
+        <iframe srcdoc="<!DOCTYPE html>
+            <html>
+                <head><style>body{background-color: #e6f7ff; font-family: sans-serif; padding: 10px; color: #004085;}</style></head>
+                <body>
+                    <h3>Content Inside a Regular Iframe</h3>
+                    <p>This content is in its own isolated document.</p>
+                </body>
+            </html>" title="Regular Iframe in Main Document">
+        </iframe>
+    </div>
+
+    <script>
+        // --- Definition for the NESTED Shadow DOM element ---
+        class MyNestedShadow extends HTMLElement {
+            constructor() {
+                super();
+                // Attach a shadow root to this custom element
+                const shadowRoot = this.attachShadow({ mode: 'open' });
+                
+                // Define the HTML and CSS for the nested shadow DOM
+                shadowRoot.innerHTML = `
+                    <style>
+                        :host { 
+                            display: block; 
+                            padding: 15px; 
+                            background-color: #fff0f5; 
+                            border: 2px dashed #d83b01; 
+                            border-radius: 5px; 
+                        }
+                        p { 
+                            color: #d83b01; 
+                            font-weight: bold; 
+                            margin: 0;
+                        }
+                    </style>
+                    <p>This text is inside a NESTED Shadow DOM! Nested styles are encapsulated here.</p>
+                `;
+            }
+        }
+        customElements.define('my-nested-shadow', MyNestedShadow);
+
+
+        // --- Definition for the MAIN Shadow DOM element ---
+        class MyShadowHost extends HTMLElement {
+            constructor() {
+                super();
+                // Attach a shadow root to this custom element
+                const shadowRoot = this.attachShadow({ mode: 'open' });
+
+                // Define the HTML and CSS for the main shadow DOM
+                // This will include the nested shadow element and an iframe
+                shadowRoot.innerHTML = `
+                    <style>
+                        /* These styles are encapsulated and ONLY apply inside this shadow DOM */
+                        :host { 
+                            display: block; 
+                            border: 2px solid #4CAF50; 
+                            padding: 20px; 
+                            border-radius: 5px; 
+                            background-color: #f1f8e9; 
+                        }
+                        h3 { color: #2e7d32; }
+                        p { color: #555; }
+                        span { background-color: yellow; padding: 2px 4px; border-radius: 3px;}
+                        
+                        /* Global styles from the main page DO NOT apply to this button by default */
+                        button {
+                            padding: 10px 20px;
+                            border: 1px solid #2e7d32;
+                            background-color: #81c784;
+                            color: #1b5e20;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            font-weight: normal;
+                        }
+                        hr { border: 0; border-top: 1px solid #a5d6a7; margin: 25px 0; }
+                    </style>
+
+                    <h3>2. Inside the Shadow DOM</h3>
+                    <p>This paragraph and the button below are rendered inside a shadow root. Their styles are <span>encapsulated</span> from the main page.</p>
+                    <button id="shadow-dom-button">Shadow DOM Button</button>
+
+                    <hr>
+
+                    <h3>3. Shadow DOM inside Shadow DOM</h3>
+                    <p>Below is another custom element, which has its own shadow DOM, placed inside the first one.</p>
+                    <my-nested-shadow></my-nested-shadow>
+
+                    <hr>
+
+                    <h3>5. Iframe inside Shadow DOM</h3>
+                    <p>This `<iframe>` is also inside the main shadow DOM. Like any iframe, it's a separate document context.</p>
+                    <iframe srcdoc="<!DOCTYPE html>
+                        <html>
+                            <head><style>body{background-color: #fff9c4; font-family: sans-serif; padding: 10px; color: #8a6d3b;}</style></head>
+                            <body>
+                                <h4>Content inside an Iframe THAT IS inside a Shadow DOM</h4>
+                                <p>This is yet another separate document context.</p>
+                            </body>
+                        </html>" title="Iframe inside Shadow DOM">
+                    </iframe>
+                `;
+            }
+        }
+        customElements.define('my-shadow-host', MyShadowHost);
+    </script>
+    
+    <script>
+        (function(){
+            var jq = document.createElement('script');
+            jq.src = "https://api.erki-vaino.dev.samo.io/salemove_integration.js";
+            document.head.appendChild(jq);
+        })();
+    </script>
+
+</body>
+</html>
