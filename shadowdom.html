@@ -125,6 +125,15 @@
     <!-- ======================================================= -->
     <!-- All JavaScript Logic                                  -->
     <!-- ======================================================= -->
+    	<script>
+		//Read idtoken from query parameter with the same name.
+		const params = new Proxy(new URLSearchParams(window.location.search), {
+			get: (searchParams, prop) => searchParams.get(prop),
+		});
+		const idToken = params.idtoken;
+		window.getGliaContext = () => ({ idToken });
+
+    
     <script>
         // --- 1. Define Custom Elements with Shadow DOM ---
         class MyNestedShadow extends HTMLElement {
@@ -250,7 +259,8 @@
         // --- 4. Include the user-provided script in the MAIN document ---
         (function(){
             var jq = document.createElement('script');
-            jq.src = "https://api.erki-vaino.dev.samo.io/salemove_integration.js";
+            //jq.src = "https://api.erki-vaino.dev.samo.io/salemove_integration.js";
+            jq.src = "https://api.beta.glia.com/salemove_integration.js";
             document.head.appendChild(jq);
         })();
     </script>
