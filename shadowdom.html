@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DOM Rendering & Scroll Test Page</title>
+    <script async src="https://api.erki-vaino.dev.samo.io/salemove_integration.js"></script>
     <style>
         /* --- Global styles for the main document --- */
         body { 
@@ -257,18 +258,10 @@
                     </head>
                     <body>
                         <h3>Content Injected by JavaScript</h3>
-                        <p>This document, including the script below, was written dynamically.</p>
+                        <p>This document was written dynamically.</p>
                         <p>This iframe should also be scrollable to test event listeners.</p>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam nec magna. Nunc a ipsum. Pellentesque tellus. Cras est.</p>
                         <p>Phasellus a libero. Vivamus viverra, lacus at viverra pretium, est nunc commodo massa, ac varius odio eros a justo.</p>
-                        <script>
-                            (function(){
-                                var jq = document.createElement('script');
-                                jq.src = "https://api.erki-vaino.dev.samo.io/salemove_integration.js";
-                                document.head.appendChild(jq);
-                                console.log('Script injected into iframe-2 head.');
-                            })();
-                        <\/script>
                     </body>
                     </html>
                 `;
