@@ -56,6 +56,18 @@
             z-index: 1000;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .image-container img {
+            max-width: 45%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -63,6 +75,17 @@
     <div id="scroll-status">Last Scrolled Area: None</div>
 
     <h1>DOM & Shadow DOM Rendering Test</h1>
+
+    <!-- ======================================================= -->
+    <!-- Local Picture Tests                                    -->
+    <!-- ======================================================= -->
+    <div class="container">
+        <h2>Local Picture Tests</h2>
+        <div class="image-container">
+            <img src="https://erxx99.github.io/Gc4Di5l_d.webp" alt="Image 1">
+            <img src="https://erxx99.github.io/Hd42mgz_d.webp" alt="Image 2">
+        </div>
+    </div>
 
     <!-- ======================================================= -->
     <!-- 1. Basic DOM Elements (Light DOM)                     -->
